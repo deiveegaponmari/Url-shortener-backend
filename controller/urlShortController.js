@@ -22,13 +22,15 @@ urlShortController.post("/shorten", async (req, res) => {
       //calculate short Url create by user
      // const calcShortUrl=0 + 1;
       // Create a new URL entry(store to database)
-      const newUrl = new urlModel({ Category: category, BigUrl: bigurl, ShortId: shortId});
+      const shorturl=`${req.protocol}://${req.get("host")}/urlshort/${shortId}`;
+      const newUrl = new urlModel({ Category: category, BigUrl: bigurl, ShortId: shortId,shortUrl:shorturl});
 
       // Save to database
       await newUrl.save();
       // Send response
+      
       /*  return res.json({ shortUrl: `http://localhost:4000/urlshort/${shortId}` });  */
-      return res.json({shortURL:`${req.protocol}://${req.get("host")}/urlshort/${shortId}`})
+      return res.json({shortURL:shorturl})
       //const shortUrl=new urlModel({shortUrl:shortURL})
     } catch (error) {
       console.error("Error saving URL:", error);

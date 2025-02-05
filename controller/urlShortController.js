@@ -29,7 +29,8 @@ urlShortController.post("/shorten", async (req, res) => {
       // Send response
       /*  return res.json({ shortUrl: `http://localhost:4000/urlshort/${shortId}` });  */
       return res.json({shortURL:`${req.protocol}://${req.get("host")}/urlshort/${shortId}`})
-  } catch (error) {
+      //const shortUrl=new urlModel({shortUrl:shortURL})
+    } catch (error) {
       console.error("Error saving URL:", error);
 
       // If an error occurs, send only one response
@@ -57,12 +58,6 @@ urlShortController.get("/:shortId", async (req, res) => {
   if(!redirectURL.startsWith('http://') && !redirectURL.startsWith('https://')){
     redirectURL = 'https://' + redirectURL;
   }
-  if(redirectURL){
-    const count=count++;
-    const shortUrl=await urlModel.create({shortUrl:redirectURL,count:count});
-    await shortUrl.save();
-  }
- 
   res.redirect(redirectURL)
   }catch(error){
     res.status(500).json({error:"server error while redirecting"})

@@ -9,7 +9,7 @@ const urlSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const urlModel = mongoose.model("URL", urlSchema);
+const urlModel = mongoose.model("urls", urlSchema);
 module.exports = {
   urlModel
 }

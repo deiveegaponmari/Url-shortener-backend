@@ -5,40 +5,48 @@ require('dotenv').config()
 
 urlShortController.post("/shorten", async (req, res) => {
   try {
-    //Get the value from client(body)
-      const { category, bigurl } = req.body;
-      if(!bigurl){
-        return res.status(400).json({error:"URL is required"})
-      }
-      //validate url format
-      try{
-        new URL(bigurl);
-      }catch(error){
-        return res.status(400).json({error:"Invalid URL format"})
-      }
-      // Generate a short ID
-      const shortId = generateShortId(6);
-      console.log(shortId);
-      //calculate short Url create by user
-     // const calcShortUrl=0 + 1;
-      // Create a new URL entry(store to database)
-      const shorturl=`${req.protocol}://${req.get("host")}/urlshort/${shortId}`;
-      const newUrl = new urlModel({ Category: category, BigUrl: bigurl, ShortId: shortId,shortUrl:shorturl});
+    const { category, bigurl } = req.body;
 
-      // Save to database
-      await newUrl.save();
-      // Send response
-      
-      /*  return res.json({ shortUrl: `http://localhost:4000/urlshort/${shortId}` });  */
-      return res.json({shortURL:shorturl})
-      //const shortUrl=new urlModel({shortUrl:shortURL})
+    if (!bigurl) {
+      return res.status(400).json({ error: "URL is required" });
+    }
+
+    try {
+      new URL(bigurl); // Validate URL format
     } catch (error) {
-      console.error("Error saving URL:", error);
+      return res.status(400).json({ error: "Invalid URL format" });
+    }
 
-      // If an error occurs, send only one response
-      return res.status(500).json({ error: "Internal Server Error" });
+    let shortId;
+    let shorturl;
+    let isUnique = false;
+
+    // ✅ Generate a unique ShortId (Retry if needed)
+    while (!isUnique) {
+      shortId = generateShortId(6);
+      shorturl = `${req.protocol}://${req.get("host")}/urlshort/${shortId}`;
+
+      const existingUrl = await urlModel.findOne({ ShortId: shortId });
+      if (!existingUrl) isUnique = true;
+    }
+
+    // ✅ Store URL in database
+    const newUrl = new urlModel({
+      Category: category,
+      BigUrl: bigurl,
+      ShortId: shortId,
+      shortUrl: shorturl
+    });
+
+    await newUrl.save();
+    return res.json({ shortURL: shorturl });
+
+  } catch (error) {
+    console.error("Error saving URL:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 urlShortController.get("/",(req,res)=>{
   res.send("Hello its working")

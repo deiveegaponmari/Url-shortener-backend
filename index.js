@@ -14,7 +14,7 @@ require("./dbconfig");
 web_server.use('/user',UserRouter);
 web_server.use("/urlshort",urlShortController)
 
-web_server.listen(4000,()=>{
+web_server.listen(process .env.HOST_PORT,()=>{
     console.log("server started successfully")
     console.log(`http://${process.env.HOST_NAME}:${process.env.HOST_PORT}`);
 })

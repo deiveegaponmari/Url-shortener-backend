@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 const urlSchema = new mongoose.Schema({
   Category: String,
   BigUrl: String,
-  ShortId: String,
+  ShortId:String,
   shortUrl:String,
-  count:Number,
   createdAt: { type: Date, default: Date.now }
 });
 

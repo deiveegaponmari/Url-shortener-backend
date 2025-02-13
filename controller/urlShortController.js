@@ -3,6 +3,8 @@ const { urlModel } = require("../model/UrlShortModel");
 const { generateShortId } = require("../utils/ShortId");
 require('dotenv').config()
 
+//post data from client
+
 urlShortController.post("/shorten", async (req, res) => {
   try {
     const { category, bigurl } = req.body;
@@ -53,6 +55,7 @@ urlShortController.get("/",(req,res)=>{
 })
 
 // Route to redirect to the original URL
+
 urlShortController.get("/:shortId", async (req, res) => {
   try{
     const { shortId } = req.params;
@@ -74,7 +77,8 @@ urlShortController.get("/:shortId", async (req, res) => {
   }
 });
 
-//Get all URL'S
+//Get all URL'S from server
+
 urlShortController.get("/allURL", async(req,res)=>{
   try{
 const urls=await urlModel.find();

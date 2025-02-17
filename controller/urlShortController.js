@@ -79,10 +79,12 @@ urlShortController.get("/:shortId", async (req, res) => {
 
 //Get all URL'S from server
 
-urlShortController.get("/allURL", async(req,res)=>{
+urlShortController.get("/geturls", async(req,res)=>{
   try{
 const urls=await urlModel.find();
 console.log(urls)
+const name="vanitha";
+console.log(name)
 res.json(urls)
   }
   catch(error){
